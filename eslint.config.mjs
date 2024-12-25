@@ -1,13 +1,13 @@
 // eslint.config.mjs
-import globals from 'globals'
-import pluginJs from '@eslint/js'
-import tseslint from 'typescript-eslint'
-import jsdoc from 'eslint-plugin-jsdoc'
+import globals from 'globals';
+import pluginJs from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import jsdoc from 'eslint-plugin-jsdoc';
 
 export default [
   { files: ['**/*.{js,mjs,cjs,ts}'] },
   { files: ['**/*.js'], languageOptions: { sourceType: 'commonjs' } },
-  { languageOptions: { globals: globals.browser } },
+  { languageOptions: { globals: { ...globals.browser, process: 'readonly' } } },
   {
     rules: {
       eqeqeq: 'off',
@@ -15,13 +15,10 @@ export default [
       'jsdoc/require-description': 'error',
       'jsdoc/check-values': 'error',
       'no-unused-vars': 'error',
-      'no-unused-expression': 'error',
+      'no-unused-expressions': 'error',
       'prefer-const': 'error',
       'no-console': 'warn',
       'no-undef': 'error',
-    },
-    globals: {
-      process: 'readonly',
     },
   },
 
@@ -35,4 +32,4 @@ export default [
       jsdoc: jsdoc, // Reference the actual plugin object
     },
   },
-]
+];
