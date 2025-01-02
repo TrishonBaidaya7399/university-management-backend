@@ -1,4 +1,4 @@
-import { Schema, model, connect } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import {
   TGuardian,
   TLocalGuardian,
@@ -29,6 +29,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 });
 const studentSchema = new Schema<TStudent>({
   _id: { type: String, required: true },
+  id: { type: String, required: true },
   name: userNameSchema,
   email: { type: String, required: true },
   contactNo: { type: String, required: true },
