@@ -5,6 +5,7 @@ import {
   TStudent,
   TUserName,
 } from './student/student.iterface';
+import validator from 'validator';
 
 // 2. Create a Schema corresponding to the document interface.
 const userNameSchema = new Schema<TUserName>({
@@ -12,29 +13,82 @@ const userNameSchema = new Schema<TUserName>({
     type: String,
     trim: true,
     required: [true, 'First name is required'],
-    minlength: [3, 'Name should be minimum 3 characters'],
-    maxlength: [20, 'Name should be maximum 20 characters'],
-    validate: function (value: string) {
-      const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
-      if (value !== firstNameStr) {
-        return false;
-      }
-      return true;
-    },
+    minlength: [3, 'First name should be minimum 3 characters'],
+    maxlength: [20, 'First name should be maximum 20 characters'],
+    validate: [
+      {
+        validator: function (value: string) {
+          const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
+          return value === firstNameStr;
+        },
+        message: '{VALUE} is not in capitalize format',
+      },
+      {
+        validator: (value: string) => validator.isAlpha(value, 'en-US'),
+        message: '{VALUE} is not a valid naming format',
+      },
+    ],
   },
   middleName: {
     type: String,
     trim: true,
-    minlength: [3, 'Name should be minimum 3 characters'],
-    maxlength: [20, 'Name should be maximum 20 characters'],
+    validate: [
+      {
+        validator: function (value: string) {
+          if (!value) return true;
+          return validator.isAlpha(value, 'en-US');
+        },
+        message: '{VALUE} is not a valid naming format',
+      },
+      {
+        validator: function (value: string) {
+          if (!value) return true;
+          return value.length >= 3 && value.length <= 20;
+        },
+        message:
+          'Middle name should be minimum 3 characters and maximum 20 characters',
+      },
+      {
+        validator: function (value: string) {
+          if (!value) return true;
+          const middleNameStr = value.charAt(0).toUpperCase() + value.slice(1);
+          return value === middleNameStr;
+        },
+        message: '{VALUE} is not in capitalize format',
+      },
+    ],
   },
   lastName: {
     type: String,
     trim: true,
-    minlength: [3, 'Name should be minimum 3 characters'],
-    maxlength: [20, 'Name should be maximum 20 characters'],
+    validate: [
+      {
+        validator: function (value: string) {
+          if (!value) return true;
+          return validator.isAlpha(value, 'en-US');
+        },
+        message: '{VALUE} is not a valid naming format',
+      },
+      {
+        validator: function (value: string) {
+          if (!value) return true;
+          return value.length >= 3 && value.length <= 20;
+        },
+        message:
+          'Last name should be minimum 3 characters and maximum 20 characters',
+      },
+      {
+        validator: function (value: string) {
+          if (!value) return true;
+          const lastNameStr = value.charAt(0).toUpperCase() + value.slice(1);
+          return value === lastNameStr;
+        },
+        message: '{VALUE} is not in capitalize format',
+      },
+    ],
   },
 });
+
 const guardianSchema = new Schema<TGuardian>({
   fatherName: {
     type: String,
@@ -49,6 +103,8 @@ const guardianSchema = new Schema<TGuardian>({
   fatherContactNo: {
     type: String,
     trim: true,
+    min: [10, 'Phone number should be at least 10 digits'],
+    max: [10, 'Phone number should be max 10 digits'],
     required: [true, 'father contact no is required'],
   },
   motherName: {
@@ -57,7 +113,12 @@ const guardianSchema = new Schema<TGuardian>({
     required: [true, 'mother name is required'],
   },
   motherOccupation: { type: String, trim: true },
-  motherContactNo: { type: String, trim: true },
+  motherContactNo: {
+    type: String,
+    trim: true,
+    min: [10, 'Phone number should be at least 10 digits'],
+    max: [10, 'Phone number should be max 10 digits'],
+  },
 });
 const localGuardianSchema = new Schema<TLocalGuardian>({
   name: {
@@ -73,6 +134,8 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   contactNo: {
     type: String,
     trim: true,
+    min: [10, 'Phone number should be at least 10 digits'],
+    max: [10, 'Phone number should be max 10 digits'],
     required: [true, 'local guardian contact no is required'],
   },
   address: {
@@ -103,13 +166,19 @@ const studentSchema = new Schema<TStudent>({
     required: [true, 'email is required'],
     unique: true,
     trim: true,
+    validate: [
+      {
+        validator: (email: string) => validator.isEmail(email),
+        message: 'Please enter a valid email',
+      },
+    ],
   },
   contactNo: {
     type: String,
     trim: true,
+    min: [10, 'Phone number should be at least 10 digits'],
+    max: [10, 'Phone number should be max 10 digits'],
     required: [true, 'contact name is required'],
-    minlength: [10, 'Contact no should be minimum 10 characters'],
-    maxlength: [13, 'Contact no should be maximum 13 characters'],
   },
   gender: {
     type: String,
