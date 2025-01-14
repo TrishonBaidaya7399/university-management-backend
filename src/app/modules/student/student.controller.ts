@@ -1,11 +1,32 @@
 import { Request, Response } from 'express';
 import { StudentServices } from './student.service';
+// import studentValidationSchema from '../Student.validation';
+import studentValidationSchema from './Student.validation.ZOD';
 
 const createStudent = async (req: Request, res: Response) => {
   try {
-    const { student: studentData } = req.body;
-    //will call service function to send this data
-    const result = await StudentServices.createStudentIntoDB(studentData);
+    const studentData = req.body;
+    // ------------- Validate data using Joi validator ------------------------
+    // const { error, value } = studentValidationSchema.validate(studentData);
+    // if (error) {
+    //   console.error(error);
+    //   res.status(500).json({
+    //     success: false,
+    //     message: 'Failed to created student',
+    //     error: error,
+    //   });
+    // }
+    // -------------------------------------------------------------------------
+
+    // ------------- Validate data using Zod validator ------------------------
+
+    const validatedStudentsData = studentValidationSchema.parse(studentData);
+
+    // ------------------------------------------------------------------------
+    console.log(validatedStudentsData);
+    const result = await StudentServices.createStudentIntoDB(
+      validatedStudentsData,
+    );
     //send res
     res.status(200).json({
       success: true,

@@ -43,8 +43,8 @@ export type TStudent = {
   isActive: 'active' | 'inactive';
   emergencyNo?: string;
   dateOfBirth?: string;
-  presentAddress: string;
-  permanentAddress: string;
+  presentAddress?: string;
+  permanentAddress?: string;
   guardian: TGuardian;
-  localGuardian: TLocalGuardian;
+  localGuardian?: TLocalGuardian;
 };
