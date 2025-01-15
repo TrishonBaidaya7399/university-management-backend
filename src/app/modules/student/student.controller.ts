@@ -37,7 +37,7 @@ const createStudent = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Failed to created student',
+      message: error.message || 'Failed to created student',
       error: error,
     });
   }
@@ -55,7 +55,7 @@ const getAllStudents = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Failed to retrieve students data',
+      message: error.message || 'Failed to retrieve students data',
       error: error,
     });
   }

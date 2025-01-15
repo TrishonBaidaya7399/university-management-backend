@@ -29,6 +29,16 @@ export const emailValidationSchema = z
     required_error: 'Email is required',
   })
   .email('Invalid email format');
+export const passwordValidationSchema = z
+  .string({
+    required_error: 'Password is required',
+  })
+  .max(20, 'Password should not be more than 20 characters')
+  .min(8, 'Password should be at least 8 characters')
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{}[\]|:;"'<>,.?/`~])[A-Za-z\d!@#$%^&*()\-_=+{}[\]|:;"'<>,.?/`~]{8,20}$/,
+    'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character',
+  );
 //   phone validation
 export const phoneNumberValidationSchema = z
   .string({
@@ -108,6 +118,7 @@ const studentValidationSchema = z.object({
   name: nameValidationSchema,
 
   email: emailValidationSchema,
+  password: passwordValidationSchema,
 
   contactNo: phoneNumberValidationSchema,
 
