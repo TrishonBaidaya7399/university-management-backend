@@ -24,7 +24,13 @@ const getSingleStudentFromDB = async (id: string) => {
   const result = await StudentModel.aggregate([{ $match: { id: id } }]);
   return result;
 };
-
+const updateSingleStudentIntoDB = async (_id: string, student: TStudent) => {
+  const result = await StudentModel.findByIdAndUpdate(_id, student, {
+    new: true,
+    runValidators: true, // Ensure the updated document is returned and validators are applied
+  });
+  return result;
+};
 const deleteSingleStudentFromDB = async (_id: string) => {
   const result = await StudentModel.updateOne(
     { _id: _id },
@@ -37,5 +43,6 @@ export const StudentServices = {
   createStudentIntoDB,
   getAllStudentsFromDB,
   getSingleStudentFromDB,
+  updateSingleStudentIntoDB,
   deleteSingleStudentFromDB,
 };

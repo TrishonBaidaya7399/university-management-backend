@@ -37,7 +37,7 @@ const createStudent = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Failed to created student',
+      message: (error as Error).message || 'Failed to created student',
       error: error,
     });
   }
@@ -55,7 +55,7 @@ const getAllStudents = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Failed to retrieve students data',
+      message: (error as Error).message || 'Failed to retrieve students data',
       error: error,
     });
   }
@@ -81,12 +81,40 @@ const getSingleStudent = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Failed to retrieve student data',
+      message: (error as Error).message || 'Failed to retrieve student data',
       error: error,
     });
   }
 };
-
+const updateSingleStudent = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { _id: studentId } = req.params;
+    const updatedData = req.body;
+    console.log({ ControllerId: studentId, controllerData: updatedData });
+    const validatedStudentsData = studentValidationSchema.parse(updatedData);
+    const result = await StudentServices.updateSingleStudentIntoDB(
+      studentId,
+      validatedStudentsData,
+    );
+    res.status(200).json({
+      success: true,
+      message: !result
+        ? 'Student not found or failed to update'
+        : 'Student is updated successfully',
+      data: result ? result : [],
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: (error as Error).message || 'Failed to update student',
+      error: error,
+    });
+  }
+};
 const deleteSingleStudent = async (req: Request, res: Response) => {
   try {
     const studentId = req.params._id;
@@ -100,7 +128,7 @@ const deleteSingleStudent = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Failed to delete student',
+      message: (error as Error).message || 'Failed to delete student',
       error: error,
     });
   }
@@ -109,5 +137,6 @@ export const StudentControllers = {
   createStudent,
   getAllStudents,
   getSingleStudent,
+  updateSingleStudent,
   deleteSingleStudent,
 };
