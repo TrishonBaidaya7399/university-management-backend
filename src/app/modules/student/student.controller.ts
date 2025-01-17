@@ -64,16 +64,43 @@ const getSingleStudent = async (req: Request, res: Response) => {
   try {
     const studentId = req.params.id;
     const result = await StudentServices.getSingleStudentFromDB(studentId);
+    if (result.length === 0) {
+      res.status(200).json({
+        success: true,
+        message: 'No student found with this id',
+        data: result,
+      });
+    } else if (result.length > 0) {
+      res.status(200).json({
+        success: true,
+        message: 'Retrieved student data successfully',
+        data: result,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to retrieve student data',
+      error: error,
+    });
+  }
+};
+
+const deleteSingleStudent = async (req: Request, res: Response) => {
+  try {
+    const studentId = req.params._id;
+    const result = await StudentServices.deleteSingleStudentFromDB(studentId);
     res.status(200).json({
       success: true,
-      message: 'Retrieved student data successfully',
+      message: 'Student is deleted successfully',
       data: result,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Failed to retrieve student data',
+      message: error.message || 'Failed to delete student',
       error: error,
     });
   }
@@ -82,4 +109,5 @@ export const StudentControllers = {
   createStudent,
   getAllStudents,
   getSingleStudent,
+  deleteSingleStudent,
 };

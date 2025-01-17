@@ -50,6 +50,7 @@ export type TStudent = {
   permanentAddress?: string;
   guardian: TGuardian;
   localGuardian?: TLocalGuardian;
+  isDeleted: boolean;
 };
 
 // For custom instance method -------------------------------------------------------------------------
