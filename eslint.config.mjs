@@ -16,7 +16,6 @@ export default [
       'jsdoc/check-values': 'error',
       'no-unused-vars': 'error',
       'no-unused-expressions': 'error',
-      'prefer-const': 'error',
       'no-console': 'warn',
       'no-undef': 'error',
     },
