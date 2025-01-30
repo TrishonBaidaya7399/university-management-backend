@@ -9,7 +9,7 @@ import {
   // TStudentMethods,
   // TStudentModel,
   TUserName,
-} from './student/student.iterface';
+} from './student.iterface';
 // import config from '../config';
 // import { required } from 'joi';
 // import validator from 'validator';

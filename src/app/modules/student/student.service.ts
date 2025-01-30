@@ -1,5 +1,5 @@
-import { StudentModel } from '../student.model';
 import { TStudent } from './student.iterface';
+import { StudentModel } from './student.model';
 
 const createStudentIntoDB = async (student: TStudent) => {
   // For static instance method ----------------------------------------------------------------------------
