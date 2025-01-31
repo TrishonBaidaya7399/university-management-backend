@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const UserValidation = z.object({
+export const UserValidation = z.object({
   id: z.string().nonempty('ID is required'),
   password: z
     .string({
@@ -26,8 +26,8 @@ const UserValidation = z.object({
     }),
   }),
   isDeleted: z.boolean().default(false).optional(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  // createdAt: z.date().optional(),
+  // updatedAt: z.date().optional(),
 });
 
 export const UserValidationSchema = {

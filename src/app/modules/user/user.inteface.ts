@@ -10,4 +10,5 @@ export type TUser = {
 };
 export interface IUserModel extends Model<TUser> {
   myStaticMethod(): number;
+  isUserExists(id: string): Promise<boolean>;
 }

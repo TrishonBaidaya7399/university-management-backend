@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { z } from 'zod';
 // name validation
 const nameValidationSchema = z.object({
@@ -23,6 +24,13 @@ const nameValidationSchema = z.object({
       "middleName shouldn't be greater than 2 or less than 20 characters if yu want to provided",
     ),
 });
+// ObjectID validation
+export const objectIdSchema = z
+  .string()
+  .refine((value) => mongoose.isValidObjectId(value), {
+    message: 'Invalid ObjectId',
+  })
+  .transform((value) => new mongoose.Types.ObjectId(value));
 // email validation
 export const emailValidationSchema = z
   .string({
@@ -103,12 +111,6 @@ const localGuardianValidationSchema = z
   .optional();
 // student validation
 const studentValidationSchema = z.object({
-  _id: z
-    .string({
-      required_error: '_id is required',
-    })
-    .min(10, '_id must be at least 10 characters'),
-
   id: z
     .string({
       required_error: 'id is required',
@@ -116,7 +118,7 @@ const studentValidationSchema = z.object({
     .min(1, 'id must not be empty'),
 
   name: nameValidationSchema,
-
+  user: objectIdSchema,
   email: emailValidationSchema,
   password: passwordValidationSchema,
 

@@ -4,7 +4,8 @@ import config from './app/config';
 
 async function main() {
   try {
-    await mongoose.connect(config.database_url as string);
+    // await mongoose.connect(config.database_url as string); // connect with mongoDB
+    await mongoose.connect(config.compass_database_url as string); // connect with mongoDB compass
     app.listen(config.port, () => {
       console.log(`Example app listening on port ${config.port}`);
     });

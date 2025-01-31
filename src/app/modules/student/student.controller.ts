@@ -1,9 +1,13 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { StudentServices } from './student.service';
 // import studentValidationSchema from '../Student.validation';
 import studentValidationSchema from './Student.validation.ZOD';
 
-const getAllStudents = async (req: Request, res: Response) => {
+const getAllStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await StudentServices.getAllStudentsFromDB();
     res.status(200).json({
@@ -12,15 +16,14 @@ const getAllStudents = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: (error as Error).message || 'Failed to retrieve students data',
-      error: error,
-    });
+    next(error);
   }
 };
-const getSingleStudent = async (req: Request, res: Response) => {
+const getSingleStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const studentId = req.params.id;
     const result = await StudentServices.getSingleStudentFromDB(studentId);
@@ -38,17 +41,13 @@ const getSingleStudent = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: (error as Error).message || 'Failed to retrieve student data',
-      error: error,
-    });
+    next(error);
   }
 };
 const updateSingleStudent = async (
   req: Request,
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const { _id: studentId } = req.params;
@@ -67,15 +66,14 @@ const updateSingleStudent = async (
       data: result ? result : [],
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: (error as Error).message || 'Failed to update student',
-      error: error,
-    });
+    next(error);
   }
 };
-const deleteSingleStudent = async (req: Request, res: Response) => {
+const deleteSingleStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const studentId = req.params._id;
     const result = await StudentServices.deleteSingleStudentFromDB(studentId);
@@ -85,12 +83,7 @@ const deleteSingleStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: (error as Error).message || 'Failed to delete student',
-      error: error,
-    });
+    next(error);
   }
 };
 export const StudentControllers = {

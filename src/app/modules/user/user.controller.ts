@@ -1,29 +1,21 @@
-import { Request, Response } from 'express';
-import { UserValidationSchema } from './user.validation.ZOD';
+import { NextFunction, Request, Response } from 'express';
+import { UserServices } from './user.service';
+import { TStudent } from '../student/student.iterface';
 
-const createStudent = async (req: Request, res: Response) => {
+const createStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const studentData = req.body;
-    // ------------- Validate data using Joi validator ------------------------
-    // const { error, value } = studentValidationSchema.validate(studentData);
-    // if (error) {
-    //   console.error(error);
-    //   res.status(500).json({
-    //     success: false,
-    //     message: 'Failed to created student',
-    //     error: error,
-    //   });
-    // }
-    // -------------------------------------------------------------------------
-
-    // ------------- Validate data using Zod validator ------------------------
-
-    const validatedStudentsData = UserValidationSchema.parse(studentData);
+    const { password, student } = req.body;
+    // const validatedStudentsData = UserValidation.parse(studentData);
 
     // ------------------------------------------------------------------------
-    console.log(validatedStudentsData);
-    const result = await StudentServices.createStudentIntoDB(
-      validatedStudentsData,
+    // console.log(validatedStudentsData);
+    const result = await UserServices.createStudentIntoDB(
+      password,
+      student as TStudent,
     );
     //send res
     res.status(200).json({
@@ -32,12 +24,7 @@ const createStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: (error as Error).message || 'Failed to created student',
-      error: error,
-    });
+    next(error);
   }
 };
 

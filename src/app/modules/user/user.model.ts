@@ -1,7 +1,10 @@
 import { model, Schema } from 'mongoose';
-import { TUser } from './user.inteface';
+import { IUserModel, TUser } from './user.inteface';
+// import bcrypt from 'bcrypt';
+import argon2 from 'argon2';
+import config from '../../config';
 
-const UserSchema = new Schema<TUser>(
+const UserSchema = new Schema<TUser, IUserModel>(
   {
     id: {
       type: String,
@@ -36,4 +39,29 @@ const UserSchema = new Schema<TUser>(
   },
   { timestamps: true },
 );
-export const User = model<TUser>('User', UserSchema);
+// pre save middleware / hook : will work on create() | save() ----------------------------------------
+UserSchema.pre('save', async function (next) {
+  // this.password = await bcrypt.hash(
+  this.password = await argon2.hash(
+    (this?.password as string) || (config?.default_password as string),
+    {
+      type: argon2.argon2d,
+      memoryCost: 2 ** 16,
+      hashLength: 50,
+    },
+    // Number(config.bcrypt_salt_rounds),
+  );
+  console.log(this, 'pre hook: Data before saving');
+  next();
+});
+// post save middleware / hook ----------------------------------------
+UserSchema.post('save', function (doc, next) {
+  doc.password = ''; // after saving the do, we will empty the password field for security purpose
+  console.log(doc, 'post hook: Data after saving');
+  next();
+});
+UserSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await UserModel.findOne({ id });
+  return existingUser;
+};
+export const UserModel = model<TUser, IUserModel>('User', UserSchema);
