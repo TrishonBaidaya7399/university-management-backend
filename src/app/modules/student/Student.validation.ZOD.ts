@@ -110,64 +110,51 @@ const localGuardianValidationSchema = z
   })
   .optional();
 // student validation
-const studentValidationSchema = z.object({
-  id: z
-    .string({
-      required_error: 'id is required',
-    })
-    .min(1, 'id must not be empty'),
-
-  name: nameValidationSchema,
-  user: objectIdSchema,
-  email: emailValidationSchema,
-  password: passwordValidationSchema,
-
-  contactNo: phoneNumberValidationSchema,
-
-  gender: z.enum(['male', 'female', 'other'], {
-    required_error: 'Gender is required',
+const createStudentValidationSchema = z.object({
+  body: z.object({
+    password: z.string().min(8).max(20),
+    student: z.object({
+      name: nameValidationSchema,
+      user: objectIdSchema,
+      email: emailValidationSchema,
+      password: passwordValidationSchema,
+      contactNo: phoneNumberValidationSchema,
+      gender: z.enum(['male', 'female', 'other'], {
+        required_error: 'Gender is required',
+      }),
+      bloodGroup: z
+        .enum([
+          'A',
+          'A+',
+          'A-',
+          'B',
+          'B+',
+          'B-',
+          'AB',
+          'AB+',
+          'AB-',
+          'O',
+          'O+',
+          'O-',
+        ])
+        .optional(),
+      dateOfBirth: z.string().optional(),
+      profileImage: z
+        .string()
+        .url('Profile Image must be a valid URL')
+        .optional(),
+      permanentAddress: z.string().optional(),
+      presentAddress: z.string().optional(),
+      emergencyNo: z
+        .string()
+        .regex(/^\d{10}$/, 'Emergency Contact Number must be exactly 10 digits')
+        .optional(),
+      guardian: guardianValidationSchema,
+      localGuardian: localGuardianValidationSchema,
+    }),
   }),
-
-  bloodGroup: z
-    .enum([
-      'A',
-      'A+',
-      'A-',
-      'B',
-      'B+',
-      'B-',
-      'AB',
-      'AB+',
-      'AB-',
-      'O',
-      'O+',
-      'O-',
-    ])
-    .optional(),
-
-  dateOfBirth: z.string().optional(),
-
-  profileImage: z.string().url('Profile Image must be a valid URL').optional(),
-
-  permanentAddress: z.string().optional(),
-
-  presentAddress: z.string().optional(),
-
-  isActive: z
-    .enum(['active', 'inactive'], {
-      required_error: 'Activity Status is required',
-    })
-    .default('active'),
-
-  emergencyNo: z
-    .string()
-    .regex(/^\d{10}$/, 'Emergency Contact Number must be exactly 10 digits')
-    .optional(),
-
-  guardian: guardianValidationSchema,
-
-  localGuardian: localGuardianValidationSchema,
-  isDeleted: z.boolean(),
 });
 
-export default studentValidationSchema;
+export const StudentValidations = {
+  createStudentValidationSchema,
+};

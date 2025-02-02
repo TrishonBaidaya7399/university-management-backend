@@ -106,4 +106,6 @@ const studentValidationSchema = Joi.object({
     .label('Local Guardian'),
 });
 
-export default studentValidationSchema;
+export const studentValidations = {
+  studentValidationSchema,
+};
